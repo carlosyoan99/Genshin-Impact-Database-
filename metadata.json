@@ -1,5 +1,5 @@
 {
-  "name": "Genshin Impact Database",
-  "description": "A comprehensive database for Genshin Impact characters, weapons, artifacts, and more.",
+  "name": "GenshinDB",
+  "description": "The ultimate database for Genshin Impact. Explore characters, weapons, artifacts, and more with real-time data from Teyvat.",
   "requestFramePermissions": []
 }

@@ -106,7 +106,7 @@ const CategoryView: React.FC<CategoryViewProps> = ({ language }) => {
               <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide max-w-[300px]">
                 {filters.map(filter => (
                   <button
-                    key={filter}
+                    key={filter as string}
                     onClick={() => setActiveFilter(filter as string)}
                     className={cn(
                       "px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-widest transition-all whitespace-nowrap border",

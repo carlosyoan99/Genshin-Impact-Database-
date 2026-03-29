@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Star, Zap, Shield, Sword, Sparkles, MapPin, Calendar, Users, Globe, Info, Trophy, Package, Utensils, Shirt, Wind, Bird, CreditCard, Image, Star as StarIcon, Sparkles as SparklesIcon, Music, Smile, List, Layers, Box, Book } from 'lucide-react';
+import { X, Star, Zap, Sword, Sparkles, Globe, Calendar, Users, Info, Star as StarIcon, Sparkles as SparklesIcon } from 'lucide-react';
 import { Item, Language } from '../types';
 import { UI_TRANSLATIONS } from '../constants';
 
@@ -141,17 +141,6 @@ const DetailModal: React.FC<DetailModalProps> = ({ item, language, onClose }) =>
                   </div>
                 )}
 
-                {(item.setEffect1 || item.setEffect2 || item.setEffect4) && (
-                  <div className="space-y-4">
-                    <h4 className="text-xs text-gray-500 uppercase font-bold tracking-widest px-1">Set Effects</h4>
-                    <div className="space-y-3">
-                      {item.setEffect1 && <DetailRow label={t.set1} value={item.setEffect1} icon={Sparkles} />}
-                      {item.setEffect2 && <DetailRow label={t.set2} value={item.setEffect2} icon={Sparkles} />}
-                      {item.setEffect4 && <DetailRow label={t.set4} value={item.setEffect4} icon={Sparkles} />}
-                    </div>
-                  </div>
-                )}
-
                 {item.recipe && item.recipe.length > 0 && (
                   <div className="space-y-4">
                     <h4 className="text-xs text-gray-500 uppercase font-bold tracking-widest px-1">{t.recipe}</h4>
@@ -160,6 +149,46 @@ const DetailModal: React.FC<DetailModalProps> = ({ item, language, onClose }) =>
                         <div key={i} className="flex items-center justify-between p-3 bg-gray-800/30 rounded-xl border border-gray-700/50">
                           <span className="text-gray-300 text-sm">{ing.name}</span>
                           <span className="text-amber-500 font-bold">x{ing.count}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {item.talents && item.talents.length > 0 && (
+                  <div className="space-y-6">
+                    <h4 className="text-xs text-gray-500 uppercase font-bold tracking-widest px-1 flex items-center gap-2">
+                      <SparklesIcon size={14} className="text-amber-500" />
+                      Talents
+                    </h4>
+                    <div className="space-y-4">
+                      {item.talents.map((talent, i) => (
+                        <div key={i} className="p-6 bg-gray-800/30 rounded-2xl border border-gray-700/50 space-y-3 hover:bg-gray-800/50 transition-colors">
+                          <div className="flex items-center justify-between">
+                            <h5 className="text-amber-500 font-bold">{talent.name}</h5>
+                            <span className="text-[10px] bg-gray-700 px-2 py-0.5 rounded uppercase tracking-tighter text-gray-400">{talent.type}</span>
+                          </div>
+                          <p className="text-gray-300 text-sm leading-relaxed">{talent.description}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {item.constellations && item.constellations.length > 0 && (
+                  <div className="space-y-6">
+                    <h4 className="text-xs text-gray-500 uppercase font-bold tracking-widest px-1 flex items-center gap-2">
+                      <StarIcon size={14} className="text-amber-500" />
+                      Constellations
+                    </h4>
+                    <div className="space-y-4">
+                      {item.constellations.map((constel, i) => (
+                        <div key={i} className="p-6 bg-gray-800/30 rounded-2xl border border-gray-700/50 space-y-3 hover:bg-gray-800/50 transition-colors">
+                          <div className="flex items-center justify-between">
+                            <h5 className="text-amber-500 font-bold">{constel.name}</h5>
+                            <span className="text-[10px] bg-amber-500/20 text-amber-500 px-2 py-0.5 rounded font-bold">C{constel.level}</span>
+                          </div>
+                          <p className="text-gray-300 text-sm leading-relaxed">{constel.description}</p>
                         </div>
                       ))}
                     </div>

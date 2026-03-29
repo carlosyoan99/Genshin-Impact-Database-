@@ -15,10 +15,45 @@ export const getItemsByCategory = async (category: Category, language: Language)
   try {
     switch (category) {
       case 'characters':
-        data = genshin.characters('names', { matchCategories: true })?.map(name => genshin.characters(name)) || [];
+        data = genshin.characters('names', { matchCategories: true })?.map(name => {
+          const char = genshin.characters(name);
+          if (!char) return null;
+          
+          // Fetch talents and constellations
+          const talents = (genshin as any).talents(name);
+          const constellations = (genshin as any).constellations(name);
+          
+          return {
+            ...char,
+            talents: talents ? [
+              { name: talents.combat1.name, description: talents.combat1.description, type: 'Normal Attack' },
+              { name: talents.combat2.name, description: talents.combat2.description, type: 'Elemental Skill' },
+              { name: talents.combat3.name, description: talents.combat3.description, type: 'Elemental Burst' },
+              ...(talents.passive1 ? [{ name: talents.passive1.name, description: talents.passive1.description, type: 'Passive' }] : []),
+              ...(talents.passive2 ? [{ name: talents.passive2.name, description: talents.passive2.description, type: 'Passive' }] : []),
+              ...(talents.passive3 ? [{ name: talents.passive3.name, description: talents.passive3.description, type: 'Passive' }] : []),
+            ] : [],
+            constellations: constellations ? [
+              { name: constellations.c1.name, description: constellations.c1.description, level: 1 },
+              { name: constellations.c2.name, description: constellations.c2.description, level: 2 },
+              { name: constellations.c3.name, description: constellations.c3.description, level: 3 },
+              { name: constellations.c4.name, description: constellations.c4.description, level: 4 },
+              { name: constellations.c5.name, description: constellations.c5.description, level: 5 },
+              { name: constellations.c6.name, description: constellations.c6.description, level: 6 },
+            ] : [],
+          };
+        }).filter(Boolean) || [];
         break;
       case 'weapons':
-        data = genshin.weapons('names', { matchCategories: true })?.map(name => genshin.weapons(name)) || [];
+        data = genshin.weapons('names', { matchCategories: true })?.map(name => {
+          const weapon = genshin.weapons(name);
+          if (!weapon) return null;
+          
+          // Fetch refinements
+          // Note: genshin-db refinements structure might vary, but usually it's in the weapon object itself or separate
+          // For now we use what's in the weapon object if available
+          return weapon;
+        }).filter(Boolean) || [];
         break;
       case 'artifacts':
         data = genshin.artifacts('names', { matchCategories: true })?.map(name => genshin.artifacts(name)) || [];
@@ -34,7 +69,6 @@ export const getItemsByCategory = async (category: Category, language: Language)
         break;
       case 'reactions':
         data = (genshin as any).elements('names', { matchCategories: true })?.map((name: string) => (genshin as any).elements(name)) || [];
-        // Add custom reactions if needed, or filter for reactions
         break;
       case 'achievements':
         data = (genshin as any).achievements('names', { matchCategories: true })?.map((name: string) => (genshin as any).achievements(name)) || [];
@@ -120,9 +154,6 @@ export const getItemsByCategory = async (category: Category, language: Language)
 };
 
 export const getLunarReactions = (language: Language): Item[] => {
-  // This is a placeholder for "lunar" reactions if they are not in genshin-db
-  // Some users refer to "Lunar" as specific TCG or event reactions.
-  // We can add them manually if needed.
   return [
     {
       name: 'Lunar Eclipse',

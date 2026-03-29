@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Sidebar from './components/Sidebar';
 import CategoryView from './components/CategoryView';
+import Home from './components/Home';
+import Footer from './components/Footer';
 import { Language } from './types';
 
 const App: React.FC = () => {
@@ -19,9 +21,11 @@ const App: React.FC = () => {
       
       <div className="flex-1 flex flex-col min-w-0">
         <Routes>
+          <Route path="/" element={<Home language={language} />} />
           <Route path="/:categoryId" element={<CategoryView language={language} />} />
-          <Route path="/" element={<Navigate to="/characters" replace />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
+        <Footer language={language} />
       </div>
     </div>
   );

@@ -57,4 +57,18 @@ export interface Item {
   character?: string;
   source?: string[];
   tcgType?: string;
+  talents?: {
+    name: string;
+    description: string;
+    type: string;
+  }[];
+  constellations?: {
+    name: string;
+    description: string;
+    level: number;
+  }[];
+  refinements?: {
+    level: number;
+    description: string;
+  }[];
 }

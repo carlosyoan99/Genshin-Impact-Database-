@@ -1,5 +1,5 @@
 import React from 'react';
-import { Search, Bell, User, Settings, HelpCircle } from 'lucide-react';
+import { Search, Bell, User, HelpCircle } from 'lucide-react';
 import { Language } from '../types';
 import { UI_TRANSLATIONS } from '../constants';
 
