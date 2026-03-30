@@ -1,20 +1,14 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { 
-  Users, Sword, Shield, Package, Ghost, Utensils, Zap, Trophy, 
-  Shirt, Map, Wind, Bird, CreditCard, Image, Globe, ChevronLeft, 
-  ChevronRight, Languages, Book, Star, Sparkles, Music, Smile, 
-  Settings, HelpCircle, List, Layers, Box, Info, Home
+  Home, Users, Swords, Shield, Briefcase, 
+  Ghost, Utensils, Zap, Settings, Globe,
+  ChevronLeft, ChevronRight, Sparkles,
+  Trophy, Shirt, Map, Compass, Book,
+  Gem, Heart, MessageSquare, LayoutGrid
 } from 'lucide-react';
 import { Category, Language } from '../types';
-import { LANGUAGES, UI_TRANSLATIONS } from '../constants';
-import { motion } from 'framer-motion';
-import { clsx, type ClassValue } from 'clsx';
-import { twMerge } from 'tailwind-merge';
-
-function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
-}
+import { UI_TRANSLATIONS, LANGUAGES } from '../constants';
 
 interface SidebarProps {
   language: Language;
@@ -24,123 +18,90 @@ interface SidebarProps {
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ language, setLanguage, isCollapsed, setIsCollapsed }) => {
-  const location = useLocation();
   const t = UI_TRANSLATIONS[language];
 
-  const menuItems: { category: Category | 'home'; icon: any; label: string; path: string }[] = [
-    { category: 'home', icon: Home, label: 'Home', path: '/' },
-    { category: 'characters', icon: Users, label: t.characters, path: '/characters' },
-    { category: 'weapons', icon: Sword, label: t.weapons, path: '/weapons' },
-    { category: 'artifacts', icon: Shield, label: t.artifacts, path: '/artifacts' },
-    { category: 'materials', icon: Package, label: t.materials, path: '/materials' },
-    { category: 'enemies', icon: Ghost, label: t.enemies, path: '/enemies' },
-    { category: 'food', icon: Utensils, label: t.food, path: '/food' },
-    { category: 'reactions', icon: Zap, label: t.reactions, path: '/reactions' },
-    { category: 'achievements', icon: Trophy, label: t.achievements, path: '/achievements' },
-    { category: 'outfits', icon: Shirt, label: t.outfits, path: '/outfits' },
-    { category: 'domains', icon: Map, label: t.domains, path: '/domains' },
-    { category: 'windgliders', icon: Wind, label: t.windgliders, path: '/windgliders' },
-    { category: 'animals', icon: Bird, label: t.animals, path: '/animals' },
-    { category: 'tcg', icon: CreditCard, label: t.tcg, path: '/tcg' },
-    { category: 'namecards', icon: Image, label: t.namecards, path: '/namecards' },
-    { category: 'geography', icon: Globe, label: t.geography, path: '/geography' },
-    { category: 'adventureranks', icon: Star, label: t.adventureranks, path: '/adventureranks' },
-    { category: 'crafts', icon: Box, label: t.crafts, path: '/crafts' },
-    { category: 'elements', icon: Sparkles, label: t.elements, path: '/elements' },
-    { category: 'emojis', icon: Smile, label: t.emojis, path: '/emojis' },
-    { category: 'voiceovers', icon: Music, label: t.voiceovers, path: '/voiceovers' },
-    { category: 'tcgcardbacks', icon: Layers, label: t.tcgcardbacks, path: '/tcgcardbacks' },
-    { category: 'tcgcardboxes', icon: Box, label: t.tcgcardboxes, path: '/tcgcardboxes' },
-    { category: 'tcgdetailedrules', icon: Book, label: t.tcgdetailedrules, path: '/tcgdetailedrules' },
-    { category: 'tcgenemycards', icon: Ghost, label: t.tcgenemycards, path: '/tcgenemycards' },
-    { category: 'tcgkeywords', icon: List, label: t.tcgkeywords, path: '/tcgkeywords' },
-    { category: 'tcglevelrewards', icon: Trophy, label: t.tcglevelrewards, path: '/tcglevelrewards' },
-    { category: 'tcgstatuseffects', icon: Zap, label: t.tcgstatuseffects, path: '/tcgstatuseffects' },
-    { category: 'tcgsummons', icon: Sparkles, label: t.tcgsummons, path: '/tcgsummons' },
+  const menuItems = [
+    { id: 'home', icon: Home, label: t.home, path: '/' },
+    { id: 'characters', icon: Users, label: t.characters, path: '/characters' },
+    { id: 'weapons', icon: Swords, label: t.weapons, path: '/weapons' },
+    { id: 'artifacts', icon: Shield, label: t.artifacts, path: '/artifacts' },
+    { id: 'materials', icon: Briefcase, label: t.materials, path: '/materials' },
+    { id: 'monsters', icon: Ghost, label: t.enemies || 'Monsters', path: '/monsters' },
+    { id: 'foods', icon: Utensils, label: t.food || 'Foods', path: '/foods' },
+    { id: 'reactions', icon: Zap, label: t.reactions || 'Reactions', path: '/reactions' },
   ];
 
   return (
-    <motion.aside
-      initial={false}
-      animate={{ width: isCollapsed ? 80 : 260 }}
-      className="h-screen bg-[#1a1c23] text-gray-300 flex flex-col border-r border-gray-800 sticky top-0 z-50"
+    <aside 
+      className={`sticky top-0 h-screen bg-[#1a1c23] border-r border-gray-800/50 flex flex-col transition-all duration-500 z-50 ${isCollapsed ? 'w-24' : 'w-80'}`}
     >
-      <div className="p-4 flex items-center justify-between border-b border-gray-800">
+      <div className="p-8 flex items-center justify-between gap-4">
         {!isCollapsed && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="flex items-center gap-2 font-bold text-white text-xl"
-          >
-            <div className="w-8 h-8 bg-amber-500 rounded-lg flex items-center justify-center">
-              <Star className="text-white w-5 h-5 fill-current" />
+          <div className="flex items-center gap-3 font-black text-white text-2xl tracking-tighter group">
+            <div className="w-10 h-10 bg-amber-500 rounded-xl flex items-center justify-center shadow-lg shadow-amber-500/20 group-hover:scale-110 transition-transform">
+              <Globe className="text-white w-6 h-6" />
             </div>
             <span>GenshinDB</span>
-          </motion.div>
+          </div>
         )}
-        <button
+        {isCollapsed && (
+          <div className="w-10 h-10 bg-amber-500 rounded-xl flex items-center justify-center shadow-lg shadow-amber-500/20 mx-auto">
+            <Globe className="text-white w-6 h-6" />
+          </div>
+        )}
+      </div>
+
+      <nav className="flex-1 px-4 py-4 space-y-2 overflow-y-auto scrollbar-hide">
+        {menuItems.map((item) => (
+          <NavLink
+            key={item.id}
+            to={item.path}
+            className={({ isActive }) => `
+              flex items-center gap-4 px-4 py-4 rounded-2xl font-bold transition-all group relative
+              ${isActive 
+                ? 'bg-amber-500 text-white shadow-xl shadow-amber-500/20' 
+                : 'text-gray-500 hover:bg-gray-800/50 hover:text-gray-300'}
+              ${isCollapsed ? 'justify-center' : ''}
+            `}
+          >
+            <item.icon size={22} className="shrink-0" />
+            {!isCollapsed && <span>{item.label}</span>}
+            {isCollapsed && (
+              <div className="absolute left-full ml-4 px-3 py-2 bg-gray-900 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-50 border border-gray-800 shadow-2xl">
+                {item.label}
+              </div>
+            )}
+          </NavLink>
+        ))}
+      </nav>
+
+      <div className="p-6 space-y-4 border-t border-gray-800/50 bg-gray-900/20">
+        {!isCollapsed && (
+          <div className="space-y-4">
+            <div className="flex items-center gap-2 text-gray-500 font-black uppercase tracking-widest text-[10px]">
+              <Globe size={12} />
+              <span>Language</span>
+            </div>
+            <select
+              value={language}
+              onChange={(e) => setLanguage(e.target.value as Language)}
+              className="w-full bg-gray-900 border border-gray-800 rounded-xl px-4 py-3 text-sm text-gray-300 font-bold outline-none focus:border-amber-500/50 transition-all appearance-none cursor-pointer hover:border-gray-700"
+            >
+              {LANGUAGES.map((lang) => (
+                <option key={lang} value={lang}>{lang}</option>
+              ))}
+            </select>
+          </div>
+        )}
+
+        <button 
           onClick={() => setIsCollapsed(!isCollapsed)}
-          className="p-2 hover:bg-gray-800 rounded-lg transition-colors"
+          className="w-full flex items-center justify-center p-3 bg-gray-800/50 hover:bg-gray-800 text-gray-400 hover:text-white rounded-xl transition-all border border-gray-800/50"
         >
           {isCollapsed ? <ChevronRight size={20} /> : <ChevronLeft size={20} />}
         </button>
       </div>
-
-      <div className="flex-1 overflow-y-auto py-4 scrollbar-hide">
-        <nav className="px-2 space-y-1">
-          {menuItems.map((item) => {
-            const isActive = location.pathname === item.path;
-            return (
-              <Link
-                key={item.category}
-                to={item.path}
-                className={cn(
-                  "flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all group relative",
-                  isActive 
-                    ? "bg-amber-500/10 text-amber-500" 
-                    : "hover:bg-gray-800 text-gray-400 hover:text-gray-200"
-                )}
-              >
-                <item.icon size={22} className={cn(isActive ? "text-amber-500" : "group-hover:text-gray-200")} />
-                {!isCollapsed && (
-                  <motion.span
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    className="font-medium truncate"
-                  >
-                    {item.label}
-                  </motion.span>
-                )}
-                {isCollapsed && (
-                  <div className="absolute left-full ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap">
-                    {item.label}
-                  </div>
-                )}
-              </Link>
-            );
-          })}
-        </nav>
-      </div>
-
-      <div className="p-4 border-t border-gray-800 space-y-4">
-        <div className="flex items-center gap-3 px-3">
-          <Languages size={20} className="text-gray-500" />
-          {!isCollapsed && (
-            <select
-              value={language}
-              onChange={(e) => setLanguage(e.target.value as Language)}
-              className="bg-transparent text-sm font-medium focus:outline-none w-full"
-            >
-              {LANGUAGES.map((lang) => (
-                <option key={lang.value} value={lang.value} className="bg-gray-900">
-                  {lang.label}
-                </option>
-              ))}
-            </select>
-          )}
-        </div>
-      </div>
-    </motion.aside>
+    </aside>
   );
 };
 

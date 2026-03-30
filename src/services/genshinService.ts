@@ -41,6 +41,7 @@ export const getItemsByCategory = async (category: Category, language: Language)
               { name: constellations.c5.name, description: constellations.c5.description, level: 5 },
               { name: constellations.c6.name, description: constellations.c6.description, level: 6 },
             ] : [],
+            costs: (char as any).costs || {}
           };
         }).filter(Boolean) || [];
         break;
@@ -48,11 +49,16 @@ export const getItemsByCategory = async (category: Category, language: Language)
         data = genshin.weapons('names', { matchCategories: true })?.map(name => {
           const weapon = genshin.weapons(name);
           if (!weapon) return null;
-          
-          // Fetch refinements
-          // Note: genshin-db refinements structure might vary, but usually it's in the weapon object itself or separate
-          // For now we use what's in the weapon object if available
-          return weapon;
+          return {
+            ...weapon,
+            refinements: [
+              { level: 1, description: (weapon as any).r1 },
+              { level: 2, description: (weapon as any).r2 },
+              { level: 3, description: (weapon as any).r3 },
+              { level: 4, description: (weapon as any).r4 },
+              { level: 5, description: (weapon as any).r5 },
+            ].filter(r => r.description)
+          };
         }).filter(Boolean) || [];
         break;
       case 'artifacts':
@@ -65,75 +71,17 @@ export const getItemsByCategory = async (category: Category, language: Language)
         data = genshin.enemies('names', { matchCategories: true })?.map(name => genshin.enemies(name)) || [];
         break;
       case 'food':
-        data = (genshin as any).foods('names', { matchCategories: true })?.map((name: string) => (genshin as any).foods(name)) || [];
+        data = (genshin as any).foods('names', { matchCategories: true })?.map((name: string) => {
+          const food = (genshin as any).foods(name);
+          if (!food) return null;
+          return {
+            ...food,
+            recipe: food.ingredients || []
+          };
+        }).filter(Boolean) || [];
         break;
       case 'reactions':
         data = (genshin as any).elements('names', { matchCategories: true })?.map((name: string) => (genshin as any).elements(name)) || [];
-        break;
-      case 'achievements':
-        data = (genshin as any).achievements('names', { matchCategories: true })?.map((name: string) => (genshin as any).achievements(name)) || [];
-        break;
-      case 'outfits':
-        data = (genshin as any).outfits('names', { matchCategories: true })?.map((name: string) => (genshin as any).outfits(name)) || [];
-        break;
-      case 'domains':
-        data = (genshin as any).domains('names', { matchCategories: true })?.map((name: string) => (genshin as any).domains(name)) || [];
-        break;
-      case 'windgliders':
-        data = (genshin as any).windgliders('names', { matchCategories: true })?.map((name: string) => (genshin as any).windgliders(name)) || [];
-        break;
-      case 'animals':
-        data = (genshin as any).animals('names', { matchCategories: true })?.map((name: string) => (genshin as any).animals(name)) || [];
-        break;
-      case 'tcg':
-        const tcgChars = (genshin as any).tcgcharacters?.('names', { matchCategories: true })?.map((name: string) => (genshin as any).tcgcharacters(name)) || [];
-        const tcgActions = (genshin as any).tcgactioncards?.('names', { matchCategories: true })?.map((name: string) => (genshin as any).tcgactioncards(name)) || [];
-        data = [...tcgChars, ...tcgActions];
-        break;
-      case 'namecards':
-        data = (genshin as any).namecards('names', { matchCategories: true })?.map((name: string) => (genshin as any).namecards(name)) || [];
-        break;
-      case 'geography':
-        data = (genshin as any).geography('names', { matchCategories: true })?.map((name: string) => (genshin as any).geography(name)) || [];
-        break;
-      case 'adventureranks':
-        data = (genshin as any).adventureranks('names', { matchCategories: true })?.map((name: string) => (genshin as any).adventureranks(name)) || [];
-        break;
-      case 'crafts':
-        data = (genshin as any).crafts('names', { matchCategories: true })?.map((name: string) => (genshin as any).crafts(name)) || [];
-        break;
-      case 'elements':
-        data = (genshin as any).elements('names', { matchCategories: true })?.map((name: string) => (genshin as any).elements(name)) || [];
-        break;
-      case 'emojis':
-        data = (genshin as any).emojis('names', { matchCategories: true })?.map((name: string) => (genshin as any).emojis(name)) || [];
-        break;
-      case 'voiceovers':
-        data = (genshin as any).voiceovers('names', { matchCategories: true })?.map((name: string) => (genshin as any).voiceovers(name)) || [];
-        break;
-      case 'tcgcardbacks':
-        data = (genshin as any).tcgcardbacks('names', { matchCategories: true })?.map((name: string) => (genshin as any).tcgcardbacks(name)) || [];
-        break;
-      case 'tcgcardboxes':
-        data = (genshin as any).tcgcardboxes('names', { matchCategories: true })?.map((name: string) => (genshin as any).tcgcardboxes(name)) || [];
-        break;
-      case 'tcgdetailedrules':
-        data = (genshin as any).tcgdetailedrules('names', { matchCategories: true })?.map((name: string) => (genshin as any).tcgdetailedrules(name)) || [];
-        break;
-      case 'tcgenemycards':
-        data = (genshin as any).tcgenemycards('names', { matchCategories: true })?.map((name: string) => (genshin as any).tcgenemycards(name)) || [];
-        break;
-      case 'tcgkeywords':
-        data = (genshin as any).tcgkeywords('names', { matchCategories: true })?.map((name: string) => (genshin as any).tcgkeywords(name)) || [];
-        break;
-      case 'tcglevelrewards':
-        data = (genshin as any).tcglevelrewards('names', { matchCategories: true })?.map((name: string) => (genshin as any).tcglevelrewards(name)) || [];
-        break;
-      case 'tcgstatuseffects':
-        data = (genshin as any).tcgstatuseffects('names', { matchCategories: true })?.map((name: string) => (genshin as any).tcgstatuseffects(name)) || [];
-        break;
-      case 'tcgsummons':
-        data = (genshin as any).tcgsummons('names', { matchCategories: true })?.map((name: string) => (genshin as any).tcgsummons(name)) || [];
         break;
       default:
         data = [];

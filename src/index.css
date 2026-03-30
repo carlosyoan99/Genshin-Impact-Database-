@@ -9,20 +9,20 @@
   body {
     @apply bg-[#0d0e12] text-gray-200;
   }
+}
 
-  /* Custom scrollbar */
-  ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-  }
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
 
-  ::-webkit-scrollbar-track {
-    @apply bg-transparent;
-  }
+::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
 
-  ::-webkit-scrollbar-thumb {
-    @apply bg-gray-800 rounded-full hover:bg-gray-700 transition-colors;
-  }
+::-webkit-scrollbar-thumb {
+  @apply bg-gray-800 rounded-full hover:bg-gray-700 transition-colors;
 }
 
 .scrollbar-hide::-webkit-scrollbar {

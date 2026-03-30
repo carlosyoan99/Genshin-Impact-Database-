@@ -91,13 +91,13 @@ const CategoryView: React.FC<CategoryViewProps> = ({ language }) => {
               <div className="flex bg-gray-900/50 rounded-xl p-1">
                 <button
                   onClick={() => setViewMode('grid')}
-                  className={cn("p-2 rounded-lg transition-all", viewMode === 'grid' ? "bg-amber-500 text-white shadow-lg shadow-amber-500/20" : "text-gray-500 hover:text-gray-300")}
+                  className={`p-2 rounded-lg transition-all ${viewMode === 'grid' ? "bg-amber-500 text-white shadow-lg shadow-amber-500/20" : "text-gray-500 hover:text-gray-300"}`}
                 >
                   <LayoutGrid size={20} />
                 </button>
                 <button
                   onClick={() => setViewMode('list')}
-                  className={cn("p-2 rounded-lg transition-all", viewMode === 'list' ? "bg-amber-500 text-white shadow-lg shadow-amber-500/20" : "text-gray-500 hover:text-gray-300")}
+                  className={`p-2 rounded-lg transition-all ${viewMode === 'list' ? "bg-amber-500 text-white shadow-lg shadow-amber-500/20" : "text-gray-500 hover:text-gray-300"}`}
                 >
                   <ListIcon size={20} />
                 </button>
@@ -108,12 +108,12 @@ const CategoryView: React.FC<CategoryViewProps> = ({ language }) => {
                   <button
                     key={filter as string}
                     onClick={() => setActiveFilter(filter as string)}
-                    className={cn(
-                      "px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-widest transition-all whitespace-nowrap border",
-                      activeFilter === filter 
+                    className={`
+                      px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-widest transition-all whitespace-nowrap border
+                      ${activeFilter === filter 
                         ? "bg-amber-500 border-amber-500 text-white shadow-lg shadow-amber-500/20" 
-                        : "bg-gray-800/50 border-gray-700 text-gray-500 hover:text-gray-300 hover:border-gray-600"
-                    )}
+                        : "bg-gray-800/50 border-gray-700 text-gray-500 hover:text-gray-300 hover:border-gray-600"}
+                    `}
                   >
                     {filter === 'all' ? t.all : filter}
                   </button>
@@ -135,12 +135,10 @@ const CategoryView: React.FC<CategoryViewProps> = ({ language }) => {
           ) : filteredItems.length > 0 ? (
             <motion.div 
               layout
-              className={cn(
-                "grid gap-8",
-                viewMode === 'grid' 
-                  ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" 
-                  : "grid-cols-1"
-              )}
+              className={viewMode === 'grid' 
+                ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8" 
+                : "flex flex-col gap-8"
+              }
             >
               <AnimatePresence mode="popLayout">
                 {filteredItems.map((item) => (
@@ -170,9 +168,5 @@ const CategoryView: React.FC<CategoryViewProps> = ({ language }) => {
     </div>
   );
 };
-
-function cn(...inputs: any[]) {
-  return inputs.filter(Boolean).join(' ');
-}
 
 export default CategoryView;

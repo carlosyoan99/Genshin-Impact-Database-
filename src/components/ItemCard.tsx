@@ -1,7 +1,7 @@
 import React from 'react';
-import { motion } from 'framer-motion';
-import { Star, Zap, Sword, Shield, Sparkles } from 'lucide-react';
 import { Item, Language } from '../types';
+import { motion } from 'framer-motion';
+import { Star, Zap, Swords, Shield, Info, ArrowRight } from 'lucide-react';
 
 interface ItemCardProps {
   item: Item;
@@ -9,23 +9,10 @@ interface ItemCardProps {
   onClick: () => void;
 }
 
-const ItemCard: React.FC<ItemCardProps> = ({ item, onClick }) => {
-  const rarity = Number(item.rarity) || 0;
-
-  const getRarityColor = (r: number) => {
-    switch (r) {
-      case 5: return 'from-amber-400 to-amber-600';
-      case 4: return 'from-purple-400 to-purple-600';
-      case 3: return 'from-blue-400 to-blue-600';
-      case 2: return 'from-green-400 to-green-600';
-      default: return 'from-gray-400 to-gray-600';
-    }
-  };
-
-  const getElementIcon = (element?: string) => {
-    if (!element) return null;
-    return <Zap size={14} className="text-blue-400" />;
-  };
+const ItemCard: React.FC<ItemCardProps> = ({ item, language, onClick }) => {
+  const rarityStars = Array.from({ length: Number(item.rarity) || 0 }).map((_, i) => (
+    <Star key={i} size={12} className="text-amber-500 fill-current" />
+  ));
 
   return (
     <motion.div
@@ -33,66 +20,66 @@ const ItemCard: React.FC<ItemCardProps> = ({ item, onClick }) => {
       initial={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.9 }}
-      whileHover={{ y: -8, scale: 1.02 }}
+      whileHover={{ y: -8 }}
       onClick={onClick}
-      className="group relative bg-[#1a1c23] rounded-3xl overflow-hidden border border-gray-800 cursor-pointer hover:border-amber-500/50 transition-all shadow-xl hover:shadow-amber-500/10"
+      className="group relative bg-gray-800/20 rounded-[32px] p-6 border border-gray-800/50 hover:border-amber-500/30 transition-all cursor-pointer overflow-hidden backdrop-blur-sm"
     >
-      <div className={cn("h-2 w-full bg-gradient-to-r", getRarityColor(rarity))} />
+      <div className="absolute inset-0 bg-gradient-to-br from-amber-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
       
-      <div className="p-6 space-y-6">
-        <div className="relative aspect-square bg-gray-800/30 rounded-2xl overflow-hidden flex items-center justify-center border border-gray-700/50 group-hover:bg-gray-800/50 transition-colors">
-          {item.icon ? (
-            <img
-              src={item.icon}
-              alt={item.name}
-              className="w-full h-full object-contain p-4 drop-shadow-2xl group-hover:scale-110 transition-transform duration-500"
-              referrerPolicy="no-referrer"
-            />
-          ) : (
-            <Sparkles size={48} className="text-gray-700" />
-          )}
+      <div className="relative z-10 space-y-6">
+        <div className="flex items-start justify-between gap-4">
+          <div className="space-y-2">
+            <div className="flex gap-0.5">{rarityStars}</div>
+            <h3 className="text-xl font-black text-white leading-tight group-hover:text-amber-500 transition-colors">
+              {item.name}
+            </h3>
+            {item.element && (
+              <div className="flex items-center gap-2 text-gray-500 text-[10px] font-black uppercase tracking-widest">
+                <Zap size={12} className="text-amber-500" />
+                <span>{item.element}</span>
+              </div>
+            )}
+          </div>
           
-          <div className="absolute top-3 right-3 flex gap-1">
-            {[...Array(rarity)].map((_, i) => (
-              <Star key={i} size={12} className="text-amber-400 fill-current" />
-            ))}
+          <div className="relative w-20 h-20 sm:w-24 sm:h-24 shrink-0">
+            <div className="absolute inset-0 bg-gray-900/50 rounded-2xl border border-gray-800 group-hover:scale-110 transition-transform duration-500" />
+            {item.icon && (
+              <img
+                src={item.icon}
+                alt={item.name}
+                className="absolute inset-0 w-full h-full object-contain p-2 drop-shadow-2xl group-hover:scale-125 transition-transform duration-500"
+                referrerPolicy="no-referrer"
+              />
+            )}
           </div>
-
-          {item.element && (
-            <div className="absolute bottom-3 left-3 px-3 py-1 bg-black/40 backdrop-blur-md rounded-full flex items-center gap-2 border border-white/10">
-              {getElementIcon(item.element)}
-              <span className="text-[10px] font-bold uppercase tracking-widest text-white">{item.element}</span>
-            </div>
-          )}
         </div>
 
-        <div className="space-y-2">
-          <h3 className="text-lg font-bold text-white truncate group-hover:text-amber-500 transition-colors">
-            {item.name}
-          </h3>
-          <p className="text-gray-500 text-xs line-clamp-2 leading-relaxed h-8">
-            {item.description || item.effect || 'No description available.'}
-          </p>
-        </div>
+        <p className="text-gray-500 text-sm line-clamp-2 font-medium leading-relaxed">
+          {item.description || item.effect || 'No description available.'}
+        </p>
 
-        <div className="flex items-center justify-between pt-2 border-t border-gray-800">
-          <div className="flex items-center gap-2">
-            {item.weaponType && <Sword size={14} className="text-gray-500" />}
-            <span className="text-[10px] font-bold text-gray-500 uppercase tracking-tighter">
-              {item.weaponType || item.type || item.category}
-            </span>
+        <div className="flex items-center justify-between pt-4 border-t border-gray-800/50">
+          <div className="flex items-center gap-3">
+            {item.weaponType && (
+              <div className="p-2 bg-gray-900/50 rounded-lg text-gray-400">
+                <Swords size={14} />
+              </div>
+            )}
+            {item.rarity && (
+              <span className="text-xs font-black text-gray-600 uppercase tracking-widest">
+                {item.rarity} Stars
+              </span>
+            )}
           </div>
-          <div className="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 group-hover:bg-amber-500 group-hover:text-white transition-all">
-            <Sparkles size={16} />
+          
+          <div className="flex items-center gap-2 text-amber-500 font-black text-[10px] uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-all translate-x-4 group-hover:translate-x-0">
+            <span>View Details</span>
+            <ArrowRight size={14} />
           </div>
         </div>
       </div>
     </motion.div>
   );
 };
-
-function cn(...inputs: any[]) {
-  return inputs.filter(Boolean).join(' ');
-}
 
 export default ItemCard;

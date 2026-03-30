@@ -1,7 +1,11 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Users, Sword, Shield, Package, Ghost, Utensils, Zap, Trophy, Sparkles, Globe, Star, Search, ArrowRight } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { 
+  Users, Swords, Shield, Ghost, 
+  Utensils, Zap, Sparkles, ArrowRight,
+  Globe, Search, Star, LayoutGrid, Filter
+} from 'lucide-react';
 import { Language } from '../types';
 import { UI_TRANSLATIONS } from '../constants';
 
@@ -10,135 +14,175 @@ interface HomeProps {
 }
 
 const Home: React.FC<HomeProps> = ({ language }) => {
+  const navigate = useNavigate();
   const t = UI_TRANSLATIONS[language];
 
-  const featuredCategories = [
-    { id: 'characters', icon: Users, label: t.characters, color: 'bg-amber-500', count: '80+' },
-    { id: 'weapons', icon: Sword, label: t.weapons, color: 'bg-blue-500', count: '150+' },
-    { id: 'artifacts', icon: Shield, label: t.artifacts, color: 'bg-purple-500', count: '40+' },
-    { id: 'enemies', icon: Ghost, label: t.enemies, color: 'bg-red-500', count: '100+' },
+  const categories = [
+    { id: 'characters', icon: Users, label: t.characters, color: 'from-blue-500 to-cyan-500', count: '80+' },
+    { id: 'weapons', icon: Swords, label: t.weapons, color: 'from-amber-500 to-orange-500', count: '150+' },
+    { id: 'artifacts', icon: Shield, label: t.artifacts, color: 'from-emerald-500 to-teal-500', count: '40+' },
+    { id: 'monsters', icon: Ghost, label: t.enemies || 'Monsters', color: 'from-purple-500 to-indigo-500', count: '100+' },
+    { id: 'foods', icon: Utensils, label: t.food || 'Foods', color: 'from-rose-500 to-pink-500', count: '120+' },
+    { id: 'reactions', icon: Zap, label: t.reactions || 'Reactions', color: 'from-yellow-500 to-amber-500', count: '15+' },
   ];
 
   return (
-    <div className="flex-1 flex flex-col min-h-screen bg-[#0d0e12]">
-      <main className="flex-1 p-8 sm:p-12 lg:p-20">
-        <div className="max-w-7xl mx-auto space-y-24">
-          {/* Hero Section */}
-          <section className="relative py-20 text-center space-y-10">
-            <div className="absolute inset-0 bg-gradient-to-b from-amber-500/10 via-transparent to-transparent blur-3xl -z-10" />
-            
+    <div className="flex-1 min-h-screen bg-[#0d0e12] overflow-x-hidden">
+      {/* Hero Section */}
+      <section className="relative h-[80vh] flex items-center justify-center overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#0d0e12] z-10" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(245,158,11,0.1),transparent_70%)]" />
+        
+        <motion.div 
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, ease: "easeOut" }}
+          className="relative z-20 text-center space-y-8 px-6"
+        >
+          <div className="inline-flex items-center gap-3 bg-amber-500/10 text-amber-500 px-6 py-3 rounded-full border border-amber-500/20 backdrop-blur-md mb-4">
+            <Sparkles size={20} />
+            <span className="text-sm font-black uppercase tracking-widest">The Ultimate Teyvat Guide</span>
+          </div>
+          
+          <h1 className="text-6xl sm:text-9xl font-black text-white tracking-tighter leading-none">
+            GENSHIN<br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-orange-500">DATABASE</span>
+          </h1>
+          
+          <p className="max-w-2xl mx-auto text-gray-400 text-xl font-medium leading-relaxed">
+            Your comprehensive companion for everything in Genshin Impact. From character builds to elemental reactions, we've got you covered.
+          </p>
+
+          <div className="flex flex-wrap items-center justify-center gap-6 pt-8">
+            <button 
+              onClick={() => navigate('/characters')}
+              className="bg-amber-500 hover:bg-amber-600 text-white px-10 py-5 rounded-3xl font-black text-lg transition-all shadow-2xl shadow-amber-500/20 flex items-center gap-3 group"
+            >
+              Start Exploring
+              <ArrowRight className="group-hover:translate-x-2 transition-transform" />
+            </button>
+            <button className="bg-gray-800/50 hover:bg-gray-800 text-white px-10 py-5 rounded-3xl font-black text-lg transition-all border border-gray-700 backdrop-blur-md">
+              Learn More
+            </button>
+          </div>
+        </motion.div>
+
+        {/* Decorative Elements */}
+        <div className="absolute top-1/4 -left-20 w-96 h-96 bg-amber-500/10 rounded-full blur-[120px] animate-pulse" />
+        <div className="absolute bottom-1/4 -right-20 w-96 h-96 bg-blue-500/10 rounded-full blur-[120px] animate-pulse delay-1000" />
+      </section>
+
+      {/* Categories Grid */}
+      <section className="max-w-7xl mx-auto px-6 sm:px-12 py-24 space-y-16">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
+          <div className="space-y-4">
+            <h2 className="text-4xl sm:text-6xl font-black text-white tracking-tight">
+              EXPLORE <span className="text-amber-500">CATEGORIES</span>
+            </h2>
+            <p className="text-gray-500 text-xl font-medium max-w-xl">
+              Dive into specific sections of the game data with detailed information and filtering.
+            </p>
+          </div>
+          <div className="flex items-center gap-4 text-gray-400 font-bold uppercase tracking-widest text-xs">
+            <LayoutGrid size={20} className="text-amber-500" />
+            <span>6 Main Categories</span>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          {categories.map((cat, idx) => (
             <motion.div
+              key={cat.id}
               initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="space-y-6"
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: idx * 0.1 }}
+              onClick={() => navigate(`/${cat.id}`)}
+              className="group relative bg-gray-800/20 rounded-[40px] p-10 border border-gray-800/50 hover:border-amber-500/30 transition-all cursor-pointer overflow-hidden backdrop-blur-sm"
             >
-              <div className="inline-flex items-center gap-2 px-4 py-2 bg-amber-500/10 text-amber-500 rounded-full text-xs font-bold uppercase tracking-widest border border-amber-500/20">
-                <Sparkles size={14} />
-                <span>The Ultimate Database</span>
+              <div className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-br ${cat.color} opacity-5 blur-[60px] group-hover:opacity-20 transition-opacity`} />
+              
+              <div className="relative z-10 space-y-8">
+                <div className={`w-16 h-16 bg-gradient-to-br ${cat.color} rounded-2xl flex items-center justify-center shadow-2xl group-hover:scale-110 transition-transform duration-500`}>
+                  <cat.icon className="text-white w-8 h-8" />
+                </div>
+                
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-3xl font-black text-white group-hover:text-amber-500 transition-colors">
+                      {cat.label}
+                    </h3>
+                    <span className="text-gray-600 font-black text-sm uppercase tracking-widest">
+                      {cat.count} Items
+                    </span>
+                  </div>
+                  <p className="text-gray-500 font-medium leading-relaxed">
+                    Comprehensive data and details for all {cat.label.toLowerCase()} in Teyvat.
+                  </p>
+                </div>
+
+                <div className="flex items-center gap-2 text-amber-500 font-black text-xs uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-all translate-x-4 group-hover:translate-x-0">
+                  <span>Explore Now</span>
+                  <ArrowRight size={16} />
+                </div>
               </div>
-              <h1 className="text-6xl sm:text-8xl font-black text-white tracking-tighter leading-tight">
-                Explore the World of <span className="text-amber-500">Teyvat</span>
-              </h1>
-              <p className="text-gray-500 text-xl sm:text-2xl max-w-3xl mx-auto font-medium leading-relaxed">
-                Your comprehensive guide to characters, weapons, artifacts, and every secret hidden in Genshin Impact.
+            </motion.div>
+          ))}
+        </div>
+      </section>
+
+      {/* Featured Section */}
+      <section className="bg-gray-900/30 py-24 border-y border-gray-800/50">
+        <div className="max-w-7xl mx-auto px-6 sm:px-12 grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+          <div className="space-y-10">
+            <div className="space-y-4">
+              <h2 className="text-4xl sm:text-6xl font-black text-white tracking-tight leading-none">
+                REAL-TIME <span className="text-amber-500">SEARCH</span>
+              </h2>
+              <p className="text-gray-400 text-xl font-medium leading-relaxed">
+                Find exactly what you're looking for with our lightning-fast search engine. Filter by element, rarity, or weapon type to narrow down your results.
               </p>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.2 }}
-              className="max-w-2xl mx-auto relative group"
-            >
-              <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-amber-500 transition-colors" size={24} />
-              <input
-                type="text"
-                placeholder="Search for anything in Teyvat..."
-                className="w-full bg-gray-800/30 border-2 border-gray-800 rounded-3xl py-6 pl-16 pr-8 text-xl text-gray-200 focus:outline-none focus:border-amber-500/50 focus:ring-4 focus:ring-amber-500/10 transition-all backdrop-blur-md"
-              />
-              <div className="absolute right-4 top-1/2 -translate-y-1/2 px-4 py-2 bg-amber-500 text-white rounded-xl font-bold text-sm shadow-lg shadow-amber-500/20 cursor-pointer hover:scale-105 transition-transform">
-                Search
-              </div>
-            </motion.div>
-          </section>
-
-          {/* Featured Categories */}
-          <section className="space-y-12">
-            <div className="flex items-end justify-between">
-              <div className="space-y-2">
-                <h2 className="text-3xl font-black text-white tracking-tight uppercase">Featured Categories</h2>
-                <p className="text-gray-500 font-medium">Quick access to the most popular database sections.</p>
-              </div>
-              <Link to="/characters" className="text-amber-500 font-bold flex items-center gap-2 hover:gap-3 transition-all">
-                View All <ArrowRight size={20} />
-              </Link>
             </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-              {featuredCategories.map((cat, i) => (
-                <Link key={cat.id} to={`/${cat.id}`}>
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.1 * i }}
-                    className="group relative p-8 bg-gray-800/20 rounded-3xl border border-gray-800 hover:border-amber-500/30 hover:bg-gray-800/30 transition-all overflow-hidden"
-                  >
-                    <div className={`w-14 h-14 ${cat.color} rounded-2xl flex items-center justify-center text-white shadow-lg shadow-black/20 mb-6 group-hover:scale-110 transition-transform`}>
-                      <cat.icon size={28} />
-                    </div>
-                    <div className="space-y-1">
-                      <h3 className="text-xl font-bold text-white">{cat.label}</h3>
-                      <p className="text-gray-500 text-sm">{cat.count} items available</p>
-                    </div>
-                    <div className="absolute top-8 right-8 text-gray-800 group-hover:text-amber-500/20 transition-colors">
-                      <cat.icon size={80} />
-                    </div>
-                  </motion.div>
-                </Link>
+            
+            <div className="space-y-6">
+              {[
+                { icon: Search, title: 'Instant Results', desc: 'Search through thousands of items in milliseconds.' },
+                { icon: Filter, title: 'Advanced Filtering', desc: 'Narrow down by element, rarity, and more.' },
+                { icon: Globe, title: 'Multi-language', desc: 'Full support for 15 different languages.' },
+              ].map((feature, idx) => (
+                <div key={idx} className="flex gap-6">
+                  <div className="w-12 h-12 bg-gray-800/50 rounded-xl flex items-center justify-center shrink-0 border border-gray-700">
+                    <feature.icon className="text-amber-500 w-6 h-6" />
+                  </div>
+                  <div className="space-y-1">
+                    <h4 className="text-white font-black uppercase tracking-widest text-sm">{feature.title}</h4>
+                    <p className="text-gray-500 font-medium">{feature.desc}</p>
+                  </div>
+                </div>
               ))}
             </div>
-          </section>
+          </div>
 
-          {/* Stats Section */}
-          <section className="grid grid-cols-1 md:grid-cols-3 gap-12 py-20 border-y border-gray-800/50">
-            <div className="text-center space-y-2">
-              <div className="text-5xl font-black text-white">15+</div>
-              <div className="text-gray-500 uppercase tracking-widest text-xs font-bold">Languages Supported</div>
-            </div>
-            <div className="text-center space-y-2 border-x border-gray-800/50">
-              <div className="text-5xl font-black text-white">1000+</div>
-              <div className="text-gray-500 uppercase tracking-widest text-xs font-bold">Total Database Items</div>
-            </div>
-            <div className="text-center space-y-2">
-              <div className="text-5xl font-black text-white">7</div>
-              <div className="text-gray-500 uppercase tracking-widest text-xs font-bold">Nations of Teyvat</div>
-            </div>
-          </section>
-
-          {/* Call to Action */}
-          <section className="relative p-12 sm:p-20 bg-gradient-to-br from-amber-500 to-amber-600 rounded-[3rem] overflow-hidden shadow-2xl shadow-amber-500/20">
-            <div className="absolute top-0 right-0 p-20 opacity-10">
-              <Star size={300} className="text-white fill-current" />
-            </div>
-            <div className="relative max-w-2xl space-y-8">
-              <h2 className="text-4xl sm:text-5xl font-black text-white leading-tight">
-                Ready to start your journey in Teyvat?
-              </h2>
-              <p className="text-amber-100 text-lg font-medium opacity-80">
-                Join thousands of travelers using GenshinDB to optimize their builds and explore the world.
-              </p>
-              <div className="flex flex-wrap gap-4">
-                <Link to="/characters" className="px-8 py-4 bg-white text-amber-600 rounded-2xl font-black text-lg shadow-xl hover:scale-105 transition-transform">
-                  Explore Characters
-                </Link>
-                <Link to="/tcg" className="px-8 py-4 bg-black/20 text-white rounded-2xl font-black text-lg backdrop-blur-md hover:bg-black/30 transition-all">
-                  TCG Guide
-                </Link>
+          <div className="relative">
+            <div className="absolute inset-0 bg-amber-500/20 blur-[120px] rounded-full" />
+            <div className="relative bg-gray-800/50 rounded-[40px] p-8 border border-gray-700 backdrop-blur-xl shadow-2xl">
+              <div className="space-y-6">
+                <div className="flex items-center gap-4 bg-gray-900/50 p-4 rounded-2xl border border-gray-800">
+                  <Search className="text-gray-500" />
+                  <span className="text-gray-500 font-medium">Search Teyvat...</span>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  {[1, 2, 3, 4].map(i => (
+                    <div key={i} className="bg-gray-900/50 p-4 rounded-2xl border border-gray-800 h-24 flex items-center justify-center">
+                      <div className="w-12 h-12 bg-gray-800 rounded-lg animate-pulse" />
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
-          </section>
+          </div>
         </div>
-      </main>
+      </section>
     </div>
   );
 };
